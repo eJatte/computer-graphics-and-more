@@ -54,6 +54,7 @@ bool Shader::checkError(uint32_t shader, const std::string &type) {
     int success;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 
+    error = false;
     if (!success) {
         error = true;
         char msg[512];

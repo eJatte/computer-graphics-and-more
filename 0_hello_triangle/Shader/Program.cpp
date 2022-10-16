@@ -34,6 +34,7 @@ bool Program::checkError(uint32_t shader) {
     int success;
     glGetProgramiv(shader, GL_LINK_STATUS, &success);
 
+    error = false;
     if (!success) {
         error = true;
         char msg[512];
