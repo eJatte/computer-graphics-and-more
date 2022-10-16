@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 
-project(hello_triangle)
+project(andromeda)
 
-add_executable(hello_triangle glad.c main.cpp)
+add_executable(andromeda glad.c main.cpp Shader/Shader.cpp Shader/Shader.h Fileutil/fileutil.cpp Fileutil/fileutil.h Shader/Program.cpp Shader/Program.h)
 
-target_link_libraries(hello_triangle GL dl glfw)
+target_link_libraries(andromeda GL dl glfw)
