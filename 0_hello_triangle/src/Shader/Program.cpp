@@ -9,6 +9,10 @@ Program::Program() {
     program = glCreateProgram();
 }
 
+Program::~Program() {
+    glDeleteProgram(program);
+}
+
 void Program::link(Shader &shader) {
     glAttachShader(program, shader.getVs());
     glAttachShader(program, shader.getFs());

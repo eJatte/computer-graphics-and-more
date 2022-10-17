@@ -13,6 +13,11 @@ Shader::Shader(std::string vsFile, std::string fsFile) : vsFilename(std::move(vs
                                                          vs(0),
                                                          fs(0) {}
 
+Shader::~Shader() {
+    glDeleteShader(vs);
+    glDeleteShader(fs);
+}
+
 void Shader::compile() {
     auto vsSource = fileutil::readFile(vsFilename);
     auto fsSource = fileutil::readFile(fsFilename);

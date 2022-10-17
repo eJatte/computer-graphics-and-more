@@ -12,6 +12,8 @@ class Program {
 public:
     Program();
 
+    ~Program();
+
     void link(Shader &shader);
 
     void use() const;

@@ -12,6 +12,8 @@ class Shader {
 public:
     Shader(std::string vsFilename, std::string fsFilename);
 
+    ~Shader();
+
     void compile();
 
     uint32_t getVs() const;
