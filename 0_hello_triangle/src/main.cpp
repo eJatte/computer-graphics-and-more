@@ -34,7 +34,7 @@ int main() {
 
     Program program = Program();
     program.link(shader);
-    if (shader.hasErrors()) {
+    if (program.hasErrors()) {
         program.printErrors();
         return -1;
     }
