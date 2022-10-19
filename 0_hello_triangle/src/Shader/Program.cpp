@@ -48,3 +48,7 @@ bool Program::checkError(uint32_t shader) {
     }
     return !success;
 }
+
+int32_t Program::getAttribLocation(const char *attribute_name) {
+    return glGetAttribLocation(program, attribute_name);
+}

@@ -22,6 +22,8 @@ public:
 
     void printErrors();
 
+    int32_t getAttribLocation(const char *attribute_name);
+
 private:
 
     bool error = true;
