@@ -2,18 +2,12 @@
 #include <GLFW/glfw3.h>
 #include "Shader/Shader.h"
 #include "Shader/Program.h"
+#include "Geometry/Geometry.h"
 
 #include <iostream>
 
 #define X_SIZE 700
 #define Y_SIZE 700
-
-float triangle_vertices[] = {
-        -.5f, -.5f, 0.f,
-        0.f, .5f, 0.f,
-        .5f, -.5f, 0.f};
-
-uint32_t indices[] = {0, 1, 2};
 
 GLFWwindow *init() {
     glfwInit();
@@ -41,36 +35,35 @@ int main() {
         return -1;
     }
 
-    program.use();
-    int32_t m_attribute_v_coord = program.getAttribLocation("v_coord");
+    std::vector<glm::vec4> vertices_vbo;
+    vertices_vbo.emplace_back(glm::vec4(-.75, -.5, 0, 1));
+    vertices_vbo.emplace_back(glm::vec4(-.5, .5, 0, 1));
+    vertices_vbo.emplace_back(glm::vec4(-.25, -.5, 0, 1));
 
-    uint32_t VBO, VAO, EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    //glGenBuffers(1, &EBO);
+    std::vector<glm::vec4> vertices_ebo;
+    vertices_ebo.emplace_back(glm::vec4(.75, -.5, 0, 1));
+    vertices_ebo.emplace_back(glm::vec4(.5, .5, 0, 1));
+    vertices_ebo.emplace_back(glm::vec4(.25, -.5, 0, 1));
 
-    glBindVertexArray(VAO);
+    std::vector<uint16_t> indices;
+    indices.emplace_back(0);
+    indices.emplace_back(1);
+    indices.emplace_back(2);
 
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    Geometry geometry_vbo(vertices_vbo);
+    geometry_vbo.upload();
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle_vertices), triangle_vertices, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(m_attribute_v_coord);
-    glVertexAttribPointer(m_attribute_v_coord, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, nullptr);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    Geometry geometry_ebo(vertices_ebo);
+    geometry_ebo.setIndices(indices);
+    geometry_ebo.upload();
 
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
 
         program.use();
 
-        glBindVertexArray(VAO);
-        //glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        geometry_vbo.render();
+        geometry_ebo.render();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

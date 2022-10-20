@@ -1,6 +1,6 @@
 #version 330 core
 
-in vec3 v_coord;
+layout (location = 0) in vec4 v_coord;
 
 void main()
 {
