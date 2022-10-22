@@ -3,6 +3,7 @@
 #include "Shader/Shader.h"
 #include "Shader/Program.h"
 #include "Geometry/Geometry.h"
+#include "Input/Input.h"
 
 #include <iostream>
 
@@ -18,8 +19,32 @@ GLFWwindow *init() {
     return window;
 }
 
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+    if (action == GLFW_RELEASE) {
+        Input::get().addKeyboardEvent(key, false);
+    } else if (action == GLFW_PRESS) {
+        Input::get().addKeyboardEvent(key, true);
+    }
+}
+
+void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
+    if (action == GLFW_RELEASE) {
+        Input::get().addKeyboardEvent(button + MOUSE_BUTTON_OFFSET, false);
+    } else if (action == GLFW_PRESS) {
+        Input::get().addKeyboardEvent(button + MOUSE_BUTTON_OFFSET, true);
+    }
+}
+
+void cursor_position_callback(GLFWwindow *window, double x, double y) {
+    Input::get().setMousePosition(glm::vec2(x, y));
+}
+
 int main() {
     GLFWwindow *window = init();
+
+    glfwSetKeyCallback(window, key_callback);
+    glfwSetCursorPosCallback(window, cursor_position_callback);
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
 
     Shader shader("../shaders/hello.vert", "../shaders/hello.frag");
     shader.compile();
@@ -57,13 +82,24 @@ int main() {
     geometry_ebo.setIndices(indices);
     geometry_ebo.upload();
 
+    bool swap = false;
+
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
+        Input::get().update();
 
         program.use();
 
-        geometry_vbo.render();
-        geometry_ebo.render();
+        if (Input::get().keyUp(MOUSE_BUTTON_LEFT)) {
+            swap = !swap;
+        }
+
+        if (swap) {
+            geometry_vbo.render();
+        } else {
+            geometry_ebo.render();
+        }
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();
